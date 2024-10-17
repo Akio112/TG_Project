@@ -3,15 +3,16 @@ from aiogram import Bot, Dispatcher, types
 from aiogram import html
 from aiogram import F
 from aiogram.client.default import DefaultBotProperties
-from handlers import commands, messages
+from App.handlers import commands, messages
+from App.config import TOKEN
 
-
-bot = Bot(token="7386338867:AAFsLTq3_2SC9UejIN94I34Q47vfZjYXUSQ", default=DefaultBotProperties(parse_mode="HTML"))
 
 def Get_Text(a):
     return html.bold(html.quote(a))
 
 async def main():
+    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
+    
     dp = Dispatcher()
 
     dp.include_routers(commands.router, messages.router)
@@ -20,4 +21,7 @@ async def main():
     await dp.start_polling(bot)
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Exit")

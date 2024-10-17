@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram import types
-from keyboards import start_keyboard_markup
+from App.keyboards import start_keyboard_markup
 
 router = Router()
 

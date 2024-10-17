@@ -1,16 +1,19 @@
+import os
 import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram import html
 from aiogram import F
 from aiogram.client.default import DefaultBotProperties
 from App.handlers import commands, messages
-from App.config import TOKEN
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def Get_Text(a):
     return html.bold(html.quote(a))
 
 async def main():
+    TOKEN = os.environ.get("TOKEN")
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
     
     dp = Dispatcher()

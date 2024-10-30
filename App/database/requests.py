@@ -22,7 +22,13 @@ async def Get_User(tg_id):
             return user
 
 # информация про тайтл
-# async def Get_Kids(parent_title):
-#     async with async_session() as session:
-#         kids = select(Archive).where(Archive.parent.is_(parent_title))
-#         print(kids)
+async def Get_Kids(parent_title):
+    async with async_session() as session:
+        kids = select(Archive).where(Archive.parent.is_(parent_title))
+        
+
+# добавить каталог или лист
+async def Add_Catalog(title, description, parent_id):
+    async with async_session() as session:
+        session.add(Archive(title = title, description = description, parent = parent_id))
+        await session.commit()

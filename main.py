@@ -5,6 +5,7 @@ from aiogram import html
 from aiogram import F
 from aiogram.client.default import DefaultBotProperties
 from App.handlers import commands, messages
+from App.database.models import Async_Main
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,6 +14,7 @@ def Get_Text(a):
     return html.bold(html.quote(a))
 
 async def main():
+    await Async_Main()
     TOKEN = os.environ.get("TOKEN")
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
     

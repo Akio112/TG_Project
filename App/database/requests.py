@@ -1,5 +1,3 @@
-import datetime
-
 from App.database.models import async_session
 from App.database.models import User, Archive
 from sqlalchemy import select

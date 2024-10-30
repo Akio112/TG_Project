@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram import types
 from App.keyboards import start_keyboard_markup
-from App.database.requests import Set_User, Add_Catalog
+from App.database.requests import Set_User, Add_Catalog, Get_Kids
 
 router = Router()
 
@@ -13,8 +13,16 @@ async def Start(message: types.Message):
     await message.answer(
         "Привет, новый пользователь!Я бот для обучения информационной безопасности и поиска тиммейтов для CTF",
         reply_markup=start_keyboard_markup)
-    await Add_Catalog("название", "описание", -1)
 
+@router.message(Command("test")) # just for us
+async def Test(message : types.Message):
+    await Add_Catalog("название", "описание", -1)
+    await Add_Catalog("название2", "описание2", 1)
+    await Add_Catalog("название3", "описание3", 1)
+    kids = await Get_Kids(1)
+    print(kids)
+    for user in kids:
+        print(user.title)
 
 @router.message(Command("help"))
 async def Help(message: types.Message):

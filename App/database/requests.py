@@ -22,9 +22,12 @@ async def Get_User(tg_id):
             return user
 
 # информация про тайтл
-async def Get_Kids(parent_title):
+async def Get_Kids(parent_id):
     async with async_session() as session:
-        kids = select(Archive).where(Archive.parent.is_(parent_title))
+        kids = await session.scalars(select(Archive).where(Archive.parent == parent_id))
+        
+        if kids:
+            return kids
         
 
 # добавить каталог или лист

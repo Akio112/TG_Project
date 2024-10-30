@@ -10,7 +10,7 @@ async def Set_User(tg_id, name):
         user = await session.scalar(select(User).where(User.tg_id == tg_id))
 
         if not user:
-            session.add(User(tg_id = tg_id, name = name))
+            session.add(User(tg_id = tg_id, name = name, archive_id = "-1"))
             await session.commit()
 
 #информация про юзера
@@ -21,6 +21,14 @@ async def Get_User(tg_id):
         if user:
             return user
 
+#информация про тайтл
+async def Get_Description(archive_id):
+    async with async_session() as session:
+        user = await session.scalar(select(Archive).where(Archive.id == archive_id))
+
+        if user:
+            return user.description
+
 # информация про тайтл
 async def Get_Kids(parent_id):
     async with async_session() as session:
@@ -28,7 +36,8 @@ async def Get_Kids(parent_id):
         
         if kids:
             return kids
-        
+
+
 
 # добавить каталог или лист
 async def Add_Catalog(title, description, parent_id):

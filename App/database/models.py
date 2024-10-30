@@ -17,6 +17,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     tg_id = mapped_column(BigInteger, unique=True)
     name: Mapped[str]
+    archive_id: Mapped[str]
 
 class Archive(Base):
     __tablename__ = 'archive'

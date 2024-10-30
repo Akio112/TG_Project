@@ -16,7 +16,7 @@ async def Start(message: types.Message):
 
 @router.message(Command("test")) # just for us
 async def Test(message : types.Message):
-    await Add_Catalog("название", "описание", -1)
+    await Add_Catalog("архив", "описание", -1)
     await Add_Catalog("название2", "описание2", 1)
     await Add_Catalog("название3", "описание3", 1)
     kids = await Get_Kids(1)

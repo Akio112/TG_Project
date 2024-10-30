@@ -1,5 +1,3 @@
-from typing import Union
-
 from aiogram.filters import BaseFilter
 from aiogram.types import Message
 from App.database.requests import Get_Description, Get_Kids, Get_User

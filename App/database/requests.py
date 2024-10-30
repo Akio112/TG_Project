@@ -20,12 +20,12 @@ async def Get_User(tg_id):
             return user
 
 #информация про тайтл
-async def Get_Description(archive_id):
+async def Get_Catalog(catalog_id):
     async with async_session() as session:
-        user = await session.scalar(select(Archive).where(Archive.id == archive_id))
+        catalog = await session.scalar(select(Archive).where(Archive.id == catalog_id))
 
-        if user:
-            return user.description
+        if catalog:
+            return catalog
 
 # информация про тайтл
 async def Get_Kids(parent_id):
@@ -34,8 +34,6 @@ async def Get_Kids(parent_id):
         
         if kids:
             return kids
-
-
 
 # добавить каталог или лист
 async def Add_Catalog(title, description, parent_id):

@@ -26,11 +26,11 @@ class Archive(Base):
     description : Mapped[str]
     parent : Mapped[str | None]
 
-async def async_main():
+async def Async_Main():
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all) # use to restart database(delete it)
+        # await conn.run_sync(Base.metadata.drop_all) # use to restart database(delete it)
         await conn.run_sync(Base.metadata.create_all)
 
 
 if __name__ == '__main__':
-    asyncio.run(async_main())
+    asyncio.run(Async_Main())

@@ -2,14 +2,16 @@ from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram import types
 from App.keyboards import start_keyboard_markup
+from App.database.requests import Set_User
 
 router = Router()
 
 
 @router.message(Command("start"))
 async def Start(message: types.Message):
+    await Set_User(message.from_user.id, message.from_user.full_name)
     await message.answer(
-        "Привет, новый пользователь!Я бот для обучение информационной безопасности и поиска тиммейтов для CTF",
+        "Привет, новый пользователь!Я бот для обучения информационной безопасности и поиска тиммейтов для CTF",
         reply_markup=start_keyboard_markup)
 
 

@@ -1,7 +1,6 @@
 from aiogram import Router, F
-from aiogram.filters import Command
 from aiogram import types
-from App.keyboards import start_keyboard_markup, KeyboardBuilder
+from App.keyboards import start_keyboard_markup, Get_Kids_Keyboard
 from App.handlers.commands import Teams
 from App.database.requests import Get_Catalog, Get_Kids, Get_User
 from App.filters import InArchiveFilter
@@ -9,11 +8,11 @@ from App.filters import InArchiveFilter
 router = Router()
 
 @router.message(F.text.lower() == "поиск")
-async def Teams_button(message: types.Message):
+async def Teams_Button(message: types.Message):
     await Teams(message)
 
 @router.message(InArchiveFilter())
-async def ArchiveNow(message: types.Message):
+async def Archive_Now(message: types.Message):
     user = await Get_User(message.from_user.id)
     kids = await Get_Kids(user.archive_id)
     id_kid = -1
@@ -22,11 +21,6 @@ async def ArchiveNow(message: types.Message):
         if (kid.title.lower() == message.text.lower()):
             id_kid = kid.id
     answer_text = (await Get_Catalog(id_kid)).description
-    
-    kids = await Get_Kids(str(id_kid))
-    kids_titles = []
-    if kids:
-        for kid in kids:
-            kids_titles.append(kid.title)
-    keyboard = await KeyboardBuilder(kids_titles)
+
+    keyboard = await Get_Kids_Keyboard(id_kid)
     await message.answer(answer_text, reply_markup= keyboard.as_markup(resize_keyboard=True))

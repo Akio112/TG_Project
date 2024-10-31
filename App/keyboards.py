@@ -1,14 +1,24 @@
 from aiogram import types
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
+from App.database.requests import Get_Kids
 
-
-async def KeyboardBuilder(buttons:list):
+async def Keyboard_Builder(buttons:list):
     builder = ReplyKeyboardBuilder()
     for button in buttons:
         builder.add(types.KeyboardButton(text=button))
         print(button)
     builder.adjust(4)
     return builder
+
+
+async def Get_Kids_Keyboard(id_kid):
+    kids = await Get_Kids(str(id_kid))
+    kids_titles = []
+    if kids:
+        for kid in kids:
+            kids_titles.append(kid.title)
+        return await KeyboardBuilder(kids_titles)
+
 
 
 start_keyboard = [

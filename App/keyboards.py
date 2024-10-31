@@ -17,7 +17,8 @@ async def Get_Kids_Keyboard(id_kid):
     if kids:
         for kid in kids:
             kids_titles.append(kid.title)
-        return await KeyboardBuilder(kids_titles)
+    kids_titles.append("Меню")
+    return await Keyboard_Builder(kids_titles)
 
 
 

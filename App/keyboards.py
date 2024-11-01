@@ -31,7 +31,7 @@ async def Get_Kids_Keyboard(id_kid):
 
 
 start_keyboard = [
-    [types.KeyboardButton(text="Архив"),types.KeyboardButton(text="Поиск")],
+    [types.KeyboardButton(text="Обучение"),types.KeyboardButton(text="Поиск")],
     [types.KeyboardButton(text="/help")]
 ]
 start_keyboard_markup = types.ReplyKeyboardMarkup(keyboard=start_keyboard,resize_keyboard=True)

@@ -17,7 +17,7 @@ async def Start(message: types.Message):
 
 @router.message(Command("test")) # just for us
 async def Test(message : types.Message):
-    await Add_Catalog("архив", "описание", -1)
+    await Add_Catalog("обучение", "описание", -1)
     await Add_Catalog("название 2", "описание 2", 1)
     await Add_Catalog("название 3", "описание 3", 1)
     kids = await Get_Kids(1)
@@ -29,7 +29,7 @@ async def Test(message : types.Message):
 async def Help(message: types.Message):
     await message.answer(
         "Это чат бот для помощи освоения в информационной безопасности для новичков, тут есть разные команды, которые тебе помогут\n"
-        "<b>/archive</b> - переместит тебя в архив, также как альтернатива, из первого меню ты можешь просто нажать кнопочку '/archive'\n"
+        "<b>/tutorial</b> - переместит тебя в архив, также как альтернатива, из первого меню ты можешь просто нажать кнопочку '/archive'\n"
         "<b>/teams</b> - переместит тебя в меню поиска и создания команд, из первого меню ты также можешь туда перейти просто нажав кнопочку '/teams'",
         reply_markup=start_keyboard_markup)
 

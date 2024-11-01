@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram import types
 from App.keyboards import start_keyboard_markup, Get_Kids_Keyboard
 #from App.handlers.commands import Teams
-from App.database.requests import Get_Catalog, Get_Kids, Get_User
+from App.database.requests import Get_Catalog, Get_Kids, Get_User,Change_State
 from App.filters import InArchiveFilter
 
 router = Router()
@@ -13,6 +13,7 @@ router = Router()
 
 @router.message(F.text.lower() == "меню")
 async def Main_Menu(message: types.Message):
+    await Change_State(message.from_user.id, "-1")
     await message.answer(
         "Добро пожаловать в главное меню! Выберите куда вы хотите перейти в поиск или изучение",
         reply_markup=start_keyboard_markup)
@@ -29,4 +30,5 @@ async def Archive_Now(message: types.Message):
             id_kid = kid.id
     answer_text = (await Get_Catalog(id_kid)).description
     keyboard = await Get_Kids_Keyboard(id_kid)
+    await Change_State(user.tg_id, str(id_kid))
     await message.answer(answer_text, reply_markup= keyboard.as_markup(resize_keyboard=True))

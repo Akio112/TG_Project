@@ -14,4 +14,4 @@ class InArchiveFilter(BaseFilter):
         if now_kids:
             for kid in now_kids:
                 now_kids_titles.append(kid.title.lower())
-        return message.text.lower() in now_kids_titles
+        return message.text.lower() in now_kids_titles or message.text.lower() == "/archive"

@@ -24,10 +24,11 @@ async def Archive_Now(message: types.Message):
     user = await Get_User(message.from_user.id)
     kids = await Get_Kids(user.archive_id)
     id_kid = -1
-    
     for kid in kids:
         if (kid.title.lower() == message.text.lower()):
             id_kid = kid.id
+    if id_kid == -1:
+        id_kid = 1
     answer_text = (await Get_Catalog(id_kid)).description
     keyboard = await Get_Kids_Keyboard(id_kid)
     await Change_State(user.tg_id, str(id_kid))

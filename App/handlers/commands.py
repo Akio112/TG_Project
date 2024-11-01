@@ -33,9 +33,9 @@ async def Help(message: types.Message):
         "<b>/teams</b> - переместит тебя в меню поиска и создания команд, из первого меню ты также можешь туда перейти просто нажав кнопочку '/teams'",
         reply_markup=start_keyboard_markup)
 
-@router.message(Command("archive"))
-async def Archive(message: types.Message):
-    await message.answer("Извините, в данный момент функция не доступна")
+#@router.message(Command("archive"))
+#async def Archive(message: types.Message):
+#    await message.answer("Извините, в данный момент функция не доступна")
 
 @router.message(Command("teams"))
 async def Teams(message: types.Message):

@@ -7,18 +7,26 @@ async def Keyboard_Builder(buttons:list):
     for button in buttons:
         builder.add(types.KeyboardButton(text=button))
         print(button)
-    builder.adjust(4)
+    builder.adjust(3)
     return builder
 
 
 async def Get_Kids_Keyboard(id_kid):
+
     kids = await Get_Kids(str(id_kid))
     kids_titles = []
     if kids:
         for kid in kids:
             kids_titles.append(kid.title)
-    kids_titles.append("Меню")
-    return await Keyboard_Builder(kids_titles)
+    builder = ReplyKeyboardBuilder()
+    if id_kid != 1:
+        builder.row(types.KeyboardButton(text="Меню"))
+    for button in kids_titles:
+        builder.add(types.KeyboardButton(text=button))
+        print(button)
+    builder.adjust(3)
+    builder.row(types.KeyboardButton(text="Назад"))
+    return builder
 
 
 

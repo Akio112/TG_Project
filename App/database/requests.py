@@ -40,3 +40,10 @@ async def Add_Catalog(title, description, parent_id):
     async with async_session() as session:
         session.add(Archive(title = title, description = description, parent = parent_id))
         await session.commit()
+
+# поменять state в архиве
+async def Change_State(tg_id, new_state):
+    async with async_session() as session:
+        state = await session.scalar(select(User).where(User.tg_id == tg_id))
+        state.archive_id = new_state
+        await session.commit()

@@ -13,7 +13,7 @@ router = Router()
 
 @router.message(MenuFilter())
 async def Main_Menu(message: types.Message):
-    await Change_Archive_State(message.from_user.id, "-1")
+    await Change_Archive_State(message.from_user.id, "-1") # type: ignore
     await message.answer(
         "Добро пожаловать в главное меню! Выберите куда вы хотите перейти в поиск или изучение",
         reply_markup=start_keyboard_markup)
@@ -21,22 +21,22 @@ async def Main_Menu(message: types.Message):
 
 @router.message(InArchiveFilter())
 async def Archive_Now(message: types.Message):
-    user = await Get_User(message.from_user.id)
-    if message.text.lower() == "назад":
-        catalog_now = await Get_Catalog(int(user.archive_id))
-        answer_text = (await Get_Catalog(int(catalog_now.parent))).description
-        keyboard = await Get_Kids_Keyboard(int(catalog_now.parent))
-        await Change_Archive_State(user.tg_id, catalog_now.parent)
+    user = await Get_User(message.from_user.id) # type: ignore
+    if message.text.lower() == "назад": # type: ignore
+        catalog_now = await Get_Catalog(int(user.archive_id)) # type: ignore
+        answer_text = (await Get_Catalog(int(catalog_now.parent))).description # type: ignore
+        keyboard = await Get_Kids_Keyboard(int(catalog_now.parent)) # type: ignore
+        await Change_Archive_State(user.tg_id, catalog_now.parent) # type: ignore
         await message.answer(answer_text, reply_markup= keyboard.as_markup(resize_keyboard=True))
     else:
-        kids = await Get_Kids(user.archive_id)
+        kids = await Get_Kids(user.archive_id) # type: ignore
         id_kid = -1
-        for kid in kids:
-            if (kid.title.lower() == message.text.lower()):
+        for kid in kids: # type: ignore
+            if (kid.title.lower() == message.text.lower()): # type: ignore
                 id_kid = kid.id
         if id_kid == -1:
             id_kid = 1
-        answer_text = (await Get_Catalog(id_kid)).description
+        answer_text = (await Get_Catalog(id_kid)).description # type: ignore
         keyboard = await Get_Kids_Keyboard(id_kid)
-        await Change_Archive_State(user.tg_id, str(id_kid))
+        await Change_Archive_State(user.tg_id, str(id_kid)) # type: ignore
         await message.answer(answer_text, reply_markup= keyboard.as_markup(resize_keyboard=True))

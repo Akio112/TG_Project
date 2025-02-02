@@ -9,8 +9,8 @@ router = Router()
 
 @router.message(Command("start"))
 async def Start(message: types.Message):
-    await Set_User(message.from_user.id, message.from_user.full_name)
-    await Change_Archive_State(message.from_user.id, "-1")
+    await Set_User(message.from_user.id, message.from_user.full_name) # type: ignore
+    await Change_Archive_State(message.from_user.id, "-1") # type: ignore
     await message.answer(
         "Привет, новый пользователь!Я бот для обучения информационной безопасности и поиска тиммейтов для CTF",
         reply_markup=start_keyboard_markup)

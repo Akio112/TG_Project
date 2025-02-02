@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram import types
 from App.keyboards import start_keyboard_markup
-from App.database.requests import Set_User, Add_Catalog, Get_Kids, Change_State
+from App.database.requests import Set_User, Add_Catalog, Get_Kids, Change_Archive_State, Add_Team
 
 router = Router()
 
@@ -10,20 +10,22 @@ router = Router()
 @router.message(Command("start"))
 async def Start(message: types.Message):
     await Set_User(message.from_user.id, message.from_user.full_name)
-    await Change_State(message.from_user.id, "-1")
+    await Change_Archive_State(message.from_user.id, "-1")
     await message.answer(
         "Привет, новый пользователь!Я бот для обучения информационной безопасности и поиска тиммейтов для CTF",
         reply_markup=start_keyboard_markup)
 
 @router.message(Command("test")) # just for us
 async def Test(message : types.Message):
-    await Add_Catalog("обучение", "описание", -1)
-    await Add_Catalog("название 2", "описание 2", 1)
-    await Add_Catalog("название 3", "описание 3", 1)
-    kids = await Get_Kids(1)
-    print(kids)
-    for user in kids:
-        print(user.title)
+    await Add_Team("first_team", "we are the best", 1)
+    await Add_Team("second", "we are not the best", 1)
+    # await Add_Catalog("обучение", "описание", -1)
+    # await Add_Catalog("название 2", "описание 2", 1)
+    # await Add_Catalog("название 3", "описание 3", 1)
+    # kids = await Get_Kids(1)
+    # print(kids)
+    # for user in kids:
+    #     print(user.title)
 
 @router.message(Command("help"))
 async def Help(message: types.Message):

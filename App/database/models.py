@@ -1,6 +1,6 @@
 import asyncio
 
-from sqlalchemy import BigInteger, DateTime
+from sqlalchemy import BigInteger, Column, ForeignKey, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncAttrs, async_sessionmaker
 from sqlalchemy.sql import func
@@ -18,6 +18,7 @@ class User(Base):
     tg_id = mapped_column(BigInteger, unique=True)
     name: Mapped[str]
     archive_state: Mapped[str]
+    search_state: Mapped[str]
 
 class Archive(Base):
     __tablename__ = 'archive'
@@ -26,6 +27,14 @@ class Archive(Base):
     title : Mapped[str]
     description : Mapped[str]
     parent : Mapped[str | None]
+
+class Team(Base):
+    __tablename__ = 'team'
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    description: Mapped[str]
+    author_id = Column(Integer, ForeignKey("users.id"))
 
 async def Async_Main():
     async with engine.begin() as conn:

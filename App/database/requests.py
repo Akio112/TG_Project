@@ -1,5 +1,5 @@
 from App.database.models import async_session
-from App.database.models import User, Archive
+from App.database.models import User, Archive, Team
 from sqlalchemy import select
 
 #создание нового юзера
@@ -8,7 +8,7 @@ async def Set_User(tg_id, name):
         user = await session.scalar(select(User).where(User.tg_id == tg_id))
 
         if not user:
-            session.add(User(tg_id = tg_id, name = name, archive_id = "-1"))
+            session.add(User(tg_id = tg_id, name = name, archive_state = "-1", search_state = "-1"))
             await session.commit()
 
 #информация про юзера
@@ -42,8 +42,31 @@ async def Add_Catalog(title, description, parent_id):
         await session.commit()
 
 # поменять state в архиве
-async def Change_State(tg_id, new_state):
+async def Change_Archive_State(tg_id, new_state):
     async with async_session() as session:
         state = await session.scalar(select(User).where(User.tg_id == tg_id))
-        state.archive_state = new_state
+        if state:
+            state.archive_state = new_state
+            await session.commit()
+            
+# поменять state в поиске
+async def Change_Search_State(tg_id, new_state):
+    async with async_session() as session:
+        state = await session.scalar(select(User).where(User.tg_id == tg_id))
+        if state:
+            state.search_state = new_state
+            await session.commit()     
+            
+# получить команду в бд
+async def Get_Team(team_id):
+    async with async_session() as session:
+        team = await session.scalar(select(Team).where(Team.id == team_id))
+
+        if team:
+            return team
+    
+# добавить команду в бд    
+async def Add_Team(name, description, author_id):
+    async with async_session() as session:
+        session.add(Team(name = name, description = description, author_id = author_id))
         await session.commit()

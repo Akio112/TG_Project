@@ -45,5 +45,5 @@ async def Add_Catalog(title, description, parent_id):
 async def Change_State(tg_id, new_state):
     async with async_session() as session:
         state = await session.scalar(select(User).where(User.tg_id == tg_id))
-        state.archive_id = new_state
+        state.archive_state = new_state
         await session.commit()

@@ -70,3 +70,10 @@ async def Add_Team(name, description, author_id):
     async with async_session() as session:
         session.add(Team(name = name, description = description, author_id = author_id))
         await session.commit()
+# удалить команду с бд
+async def Delete_Team(id):
+    async with async_session() as session:
+        team = await session.scalar(select(Team).where(Team.id == id))
+        if team:
+            await session.delete(team)
+        await session.commit()

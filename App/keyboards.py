@@ -34,4 +34,16 @@ start_keyboard = [
     [types.KeyboardButton(text="Обучение"),types.KeyboardButton(text="Поиск")],
     [types.KeyboardButton(text="/help")]
 ]
+
+search_menu_keyboard = [
+    [types.KeyboardButton(text="Управление своими командами")],[types.KeyboardButton(text="Поиск команды")]
+]
+
+team_menu_keyboard = [
+    [types.KeyboardButton(text="Создать команду"),types.KeyboardButton(text="Изменить команду")],
+]
+
+
 start_keyboard_markup = types.ReplyKeyboardMarkup(keyboard=start_keyboard,resize_keyboard=True)
+search_menu_markup = types.ReplyKeyboardMarkup(keyboard=search_menu_keyboard, resize_keyboard=True)
+team_menu_markup = types.ReplyKeyboardMarkup(keyboard=team_menu_keyboard, resize_keyboard=True)

@@ -12,12 +12,11 @@ load_dotenv()
 
 def Get_Text(a):
     return html.bold(html.quote(a))
+TOKEN = os.environ.get("TOKEN")
+bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 
 async def main():
     await Async_Main()
-    TOKEN = os.environ.get("TOKEN")
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
-    
     dp = Dispatcher()
 
     dp.include_routers(commands.router, messages.router)

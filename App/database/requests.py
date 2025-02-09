@@ -67,9 +67,9 @@ async def Get_Team(team_id):
             return team
     
 # добавить команду в бд    
-async def Add_Team(name, description, author_id):
+async def Add_Team(name, description, author_id, chat_id):
     async with async_session() as session:
-        session.add(Team(name = name, description = description, author_id = author_id))
+        session.add(Team(name = name, description = description, author_id = author_id, chat_id=chat_id))
         await session.commit()
         
 # удалить команду с бд
@@ -78,7 +78,6 @@ async def Delete_Team(id):
         team = await session.scalar(select(Team).where(Team.id == id))
         if team:
             await session.delete(team)
-            print("-маслина")
         await session.commit()
         
 # выдать все команды владелец которых имеет tg_id

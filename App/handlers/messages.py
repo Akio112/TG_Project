@@ -2,13 +2,16 @@ from aiogram import Router, F
 from aiogram import types
 from aiogram.filters import  StateFilter
 from aiogram.fsm.state import StatesGroup, State
+from aiogram.types import CallbackQuery
 
 from App.keyboards import start_keyboard_markup, Get_Kids_Keyboard, search_menu_markup, team_menu_markup, last_markup
 #from App.handlers.commands import Teams
-from App.database.requests import Get_Catalog, Get_Kids, Get_User,Change_Archive_State, Change_Search_State, Add_Team, Delete_Team, Give_Teams_User
-from App.filters import InArchiveFilter, MenuFilter, InSearchFilter, MakeTeamFilter
+from App.database.requests import (Get_Catalog, Get_Kids, Get_User,
+                                   Change_Archive_State, Change_Search_State, Add_Team, Delete_Team, Give_Teams_User, Get_Team)
+from App.filters import InArchiveFilter, MenuFilter, InSearchFilter, MakeTeamFilter, SearchFilter
 from aiogram.fsm.context import FSMContext
-
+from App.pagination import get_paginated_kb, Pagination
+from main import bot
 router = Router()
 
 #router.message(F.text.lower() == "поиск")
@@ -59,7 +62,6 @@ async def SearchMenu(message: types.Message):
 
 @router.message(FormTeam.choosing_team_name)
 async def NameChosen(message: types.Message, state:FSMContext):
-    print(1)
     await state.update_data(new_name = message.text)
     await message.answer("Пожалуйста напишите немного о команде")
     await state.set_state(FormTeam.choosing_team_description)
@@ -68,12 +70,57 @@ async def DescriptionChosen(message: types.Message, state: FSMContext):
     name_team = await state.get_data()
     user = await Get_User(message.from_user.id) # type: ignore
     await message.answer("Команда создана!")
-    await Add_Team(name_team['new_name'], message.text, user.id)
+    await Add_Team(name_team['new_name'], message.text, user.id, message.chat.id)
     await message.answer(
         "Выберите, хотите ли вы создать новую команду или изменить информацию о прошлой команде",
         reply_markup=team_menu_markup)
     await Change_Search_State(user.tg_id, "2")  # type: ignore
     await state.clear()
+
+@router.message(SearchFilter())
+async def Search(message: types.Message):
+    first_teams = []
+    for i in range(0, 5):
+        team = await Get_Team(i+1)
+        if(team):
+            first_teams.append(team)
+        else:
+            break
+    if (len(first_teams) == 0):
+        await message.answer("Простите, команд еще нет:(", reply_markup= last_markup)
+        await SearchMenu(message)
+    else:
+        text_to_message = "Список команд:\n"
+        for team in first_teams:
+            text_to_message+= team.name+"-" + team.description + "\n"
+        await message.answer(text_to_message, reply_markup=await get_paginated_kb())
+
+
+@router.callback_query()
+async def Pagination_Callback(callback: CallbackQuery):
+    user = await Get_User(callback.from_user.id) # type: ignore
+    if (callback.data.isdigit()):
+        first_teams = []
+        page = int(callback.data)
+        for i in range(page * 5,page * 5 + 5):
+            team = await Get_Team(i + 1)
+            if (team):
+                first_teams.append(team)
+            else:
+                break
+        text_to_message = "Список команд:\n"
+        for team in first_teams:
+            text_to_message += team.name + "-" + team.description + "\n"
+        await callback.message.edit_text(text_to_message,reply_markup=await get_paginated_kb(page=page))
+    elif (callback.data.find("team") != -1):
+        team = await Get_Team(int(callback.data.split("team")[1]))
+        await bot.send_message(chat_id=team.chat_id,text= "Пользователь @"+callback.from_user.username + " отправил вам заявку")
+    else:
+        await callback.message.delete()
+        await SearchMenu(callback.message)
+
+    await callback.answer()
+
 @router.message(MakeTeamFilter())
 async def Make_Team(message: types.Message, state: FSMContext):
     user = await Get_User(message.from_user.id) # type: ignore
@@ -108,8 +155,6 @@ async def Make_Team(message: types.Message, state: FSMContext):
             await Change_Search_State(user.tg_id, "2")
         elif ((int)(message.text) <= len(teams_list)):
             await Delete_Team(teams_list[(int)(message.text) - 1].id)
-            print((int)(message.text) - 1)
-            print(teams_list[(int)(message.text) - 1].name)
             await message.answer("Напишите название команды")
             await state.set_state(FormTeam.choosing_team_name)
 

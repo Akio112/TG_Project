@@ -35,6 +35,7 @@ class Team(Base):
     name: Mapped[str]
     description: Mapped[str]
     author_id = Column(Integer, ForeignKey("users.id"))
+    chat_id: Mapped[int]
 
 async def Async_Main():
     async with engine.begin() as conn:

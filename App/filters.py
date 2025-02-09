@@ -29,7 +29,7 @@ class InSearchFilter(BaseFilter):
         pass
     async def __call__(self, message: types.Message) -> bool:
         user = await Get_User(message.from_user.id)
-        return (message.text.lower() == "/search" or message.text.lower() == "поиск") and user.archive_state == "-1"
+        return (message.text.lower() == "/search" or message.text.lower() == "поиск") and user.archive_state == "-1" and user.search_state == "-1"
 
 class MakeTeamFilter(BaseFilter):
     def __init__(self):
@@ -38,3 +38,9 @@ class MakeTeamFilter(BaseFilter):
         user = await Get_User(message.from_user.id)
         return (user.search_state == "2" or user.search_state == "3" or user.search_state == "4" or (user.search_state == "1" and message.text.lower() == "управление своими командами"))
 
+class SearchFilter(BaseFilter):
+    def __init__(self):
+        pass
+    async def __call__(self, message: types.Message) -> bool:
+        user = await Get_User(message.from_user.id)
+        return (user.search_state == "1" and message.text.lower() == "поиск команды")

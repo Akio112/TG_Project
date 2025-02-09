@@ -114,7 +114,8 @@ async def Pagination_Callback(callback: CallbackQuery):
         await callback.message.edit_text(text_to_message,reply_markup=await get_paginated_kb(page=page))
     elif (callback.data.find("team") != -1):
         team = await Get_Team(int(callback.data.split("team")[1]))
-        await bot.send_message(chat_id=team.chat_id,text= "Пользователь @"+callback.from_user.username + " отправил вам заявку")
+        if callback.message.chat.id != team.chat_id:
+            await bot.send_message(chat_id=team.chat_id,text= "Пользователь @"+callback.from_user.username + " отправил вам заявку")
     else:
         await callback.message.delete()
         await SearchMenu(callback.message)

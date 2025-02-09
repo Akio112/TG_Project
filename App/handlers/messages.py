@@ -1,15 +1,24 @@
 from aiogram import Router, F
 from aiogram import types
-from App.keyboards import start_keyboard_markup, Get_Kids_Keyboard, search_menu_markup, team_menu_markup
+from aiogram.filters import  StateFilter
+from aiogram.fsm.state import StatesGroup, State
+
+from App.keyboards import start_keyboard_markup, Get_Kids_Keyboard, search_menu_markup, team_menu_markup, last_markup
 #from App.handlers.commands import Teams
-from App.database.requests import Get_Catalog, Get_Kids, Get_User,Change_Archive_State, Change_Search_State
+from App.database.requests import Get_Catalog, Get_Kids, Get_User,Change_Archive_State, Change_Search_State, Add_Team, Delete_Team, Give_Teams_User
 from App.filters import InArchiveFilter, MenuFilter, InSearchFilter, MakeTeamFilter
+from aiogram.fsm.context import FSMContext
 
 router = Router()
 
 #router.message(F.text.lower() == "поиск")
 #async def Teams_Button(message: types.Message):
 #    await Teams(message)
+
+
+class MakeTeam(StatesGroup):
+    choosing_team_name = State()
+    choosing_team_description = State()
 
 @router.message(MenuFilter())
 async def Main_Menu(message: types.Message):
@@ -47,14 +56,58 @@ async def SearchMenu(message: types.Message):
                          reply_markup= search_menu_markup)
     await Change_Search_State(user.tg_id, "1") # type: ignore
 
-@router.message(MakeTeamFilter)
-async def MakeTeam(message: types.Message):
+@router.message(MakeTeamFilter())
+async def Make_Team(message: types.Message):
     user = await Get_User(message.from_user.id) # type: ignore
     if (user.search_state == "1" and message.text.lower() == "управление своими командами"): # type: ignore
         await message.answer("Выберите, хотите ли вы создать новую команду или изменить информацию о прошлой команде",
             reply_markup=team_menu_markup)
         await Change_Search_State(user.tg_id, "2") # type: ignore
+    elif (user.search_state == "2" ):
+        if (message.text.lower() == "создать команду"):
+            await message.answer("Напишите название команды, а также информацию о ней в формате:\nНазвание:\nО команде:")
+            await Change_Search_State(user.tg_id, "3")
+        elif(message.text.lower() == "изменить команду"):
+            teams = await Give_Teams_User(user.tg_id)
+            count_teams = 1
+            text_to_message = "Выберите номер команды из списка:"
+            for el in teams:
+                text_to_message += "\n"+((str)(count_teams) + " " + el.name)
+                count_teams+=1
+            await message.answer(text_to_message, reply_markup=last_markup)
+            await Change_Search_State(user.tg_id, "4")
+        elif (message.text.lower() == "назад"):
+            await SearchMenu(message)
 
+    elif (user.search_state == "3"):
+        if (message.text.find("Название:")!= -1 and message.text.find("О команде:") != -1):
+            await Add_Team(message.text.split("О команде:")[0].split("Название:")[1][:-1], message.text.split("О команде:")[1],user.id)
+            await message.answer("Команда создана!", reply_markup=team_menu_markup)
+            await message.answer(
+                "Выберите, хотите ли вы создать новую команду или изменить информацию о прошлой команде",
+                reply_markup=team_menu_markup)
+            await Change_Search_State(user.tg_id,"2")
+        else:
+            await message.answer("Неверный формат ввода")
+    elif (user.search_state =="4"):
+        teams = await Give_Teams_User(user.tg_id)
+        teams_list =[]
+        for el in teams:
+            teams_list.append(el)
+        if (message.text.lower() == "назад"):
+            await message.answer(
+                "Выберите, хотите ли вы создать новую команду или изменить информацию о прошлой команде",
+                reply_markup=team_menu_markup)
+            await Change_Search_State(user.tg_id, "2")
+        elif ((int)(message.text) <= len(teams_list)):
+            await Delete_Team(teams_list[(int)(message.text) - 1].id)
+            print((int)(message.text) - 1)
+            print(teams_list[(int)(message.text) - 1].name)
+            await Change_Search_State(user.tg_id,"3")
+            await message.answer(
+                "Напишите название команды, а также информацию о ней в формате:\nНазвание:\nО команде:")
+        else:
+            await message.answer("Некорректный номер")
 #@router.message()
 #async def Menu(message: types.Message):
 #    user = await Get_User(message.from_user.id)

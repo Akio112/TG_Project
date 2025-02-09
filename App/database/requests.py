@@ -78,6 +78,7 @@ async def Delete_Team(id):
         team = await session.scalar(select(Team).where(Team.id == id))
         if team:
             await session.delete(team)
+            print("-маслина")
         await session.commit()
         
 # выдать все команды владелец которых имеет tg_id

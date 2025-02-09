@@ -36,14 +36,21 @@ start_keyboard = [
 ]
 
 search_menu_keyboard = [
-    [types.KeyboardButton(text="Управление своими командами")],[types.KeyboardButton(text="Поиск команды")]
+    [types.KeyboardButton(text="Управление своими командами"),types.KeyboardButton(text="Поиск команды")],
+    [types.KeyboardButton(text="Назад")]
 ]
 
 team_menu_keyboard = [
     [types.KeyboardButton(text="Создать команду"),types.KeyboardButton(text="Изменить команду")],
+    [types.KeyboardButton(text="Назад")]
+]
+
+last_keyboard = [
+    [types.KeyboardButton(text="Назад")]
 ]
 
 
 start_keyboard_markup = types.ReplyKeyboardMarkup(keyboard=start_keyboard,resize_keyboard=True)
 search_menu_markup = types.ReplyKeyboardMarkup(keyboard=search_menu_keyboard, resize_keyboard=True)
 team_menu_markup = types.ReplyKeyboardMarkup(keyboard=team_menu_keyboard, resize_keyboard=True)
+last_markup = types.ReplyKeyboardMarkup(keyboard=last_keyboard, resize_keyboard=True)

@@ -21,7 +21,7 @@ class MenuFilter(BaseFilter):
 
     async def __call__(self, message: types.Message) -> bool:
         user = await Get_User(message.from_user.id)
-        return message.text.lower() == "меню" or (message.text.lower() == "назад" and user.archive_state == "1")
+        return message.text.lower() == "меню" or (message.text.lower() == "назад" and (user.archive_state == "1" or user.search_state == "1"))
 
 
 class InSearchFilter(BaseFilter):
@@ -36,5 +36,5 @@ class MakeTeamFilter(BaseFilter):
         pass
     async def __call__(self, message: types.Message) -> bool:
         user = await Get_User(message.from_user.id)
-        return user.search_state != "-1"
+        return (user.search_state == "2" or user.search_state == "3" or user.search_state == "4" or (user.search_state == "1" and message.text.lower() == "управление своими командами"))
 

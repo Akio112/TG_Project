@@ -42,18 +42,18 @@ async def Archive_Now(message: types.Message):
         await message.answer(answer_text, reply_markup= keyboard.as_markup(resize_keyboard=True))
 @router.message(InSearchFilter())
 async def SearchMenu(message: types.Message):
-    user = await Get_User(message.from_user.id)
+    user = await Get_User(message.from_user.id) # type: ignore
     await message.answer("Добро пожаловать в меню поиска, здесь вы можете найти или создать свою команду",
                          reply_markup= search_menu_markup)
-    await Change_Search_State(user.tg_id, "1")
+    await Change_Search_State(user.tg_id, "1") # type: ignore
 
 @router.message(MakeTeamFilter)
 async def MakeTeam(message: types.Message):
-    user = await Get_User(message.from_user.id)
-    if (user.search_state == "1" and message.text.lower() == "управление своими командами"):
+    user = await Get_User(message.from_user.id) # type: ignore
+    if (user.search_state == "1" and message.text.lower() == "управление своими командами"): # type: ignore
         await message.answer("Выберите, хотите ли вы создать новую команду или изменить информацию о прошлой команде",
             reply_markup=team_menu_markup)
-        await Change_Search_State(user.tg_id, "2")
+        await Change_Search_State(user.tg_id, "2") # type: ignore
 
 #@router.message()
 #async def Menu(message: types.Message):

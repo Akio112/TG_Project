@@ -1,3 +1,4 @@
+from ssl import SSL_ERROR_SSL
 from App.database.models import async_session
 from App.database.models import User, Archive, Team
 from sqlalchemy import select
@@ -70,6 +71,7 @@ async def Add_Team(name, description, author_id):
     async with async_session() as session:
         session.add(Team(name = name, description = description, author_id = author_id))
         await session.commit()
+        
 # удалить команду с бд
 async def Delete_Team(id):
     async with async_session() as session:
@@ -77,3 +79,12 @@ async def Delete_Team(id):
         if team:
             await session.delete(team)
         await session.commit()
+        
+# выдать все команды владелец которых имеет tg_id
+async def Give_Teams_User(tg_id):
+    async with async_session() as session:
+        user = await Get_User(tg_id)
+        if user:
+            teams = await session.scalars(select(Team).where(Team.author_id == user.id))
+            return teams
+        return None

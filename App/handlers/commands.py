@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram import types
 from App.keyboards import start_keyboard_markup
-from App.database.requests import Set_User, Add_Catalog, Get_Kids, Change_Archive_State, Add_Team
+from App.database.requests import Delete_Team, Give_Teams_User, Set_User, Add_Catalog, Get_Kids, Change_Archive_State, Add_Team
 
 router = Router()
 
@@ -26,7 +26,16 @@ async def Test(message : types.Message):
     # print(kids)
     # for user in kids:
     #     print(user.title)
-
+    
+@router.message(Command("test2")) # just for us
+async def Test2(message : types.Message):
+    sp = await Give_Teams_User(1140836697)
+    print(sp)
+    if sp:
+        for i in sp:
+            print(i.id)    
+    
+    
 @router.message(Command("help"))
 async def Help(message: types.Message):
     await message.answer(
